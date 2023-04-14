@@ -1,0 +1,308 @@
+<!-- Template extension from header.html -->
+{% extends 'header.html' %}
+
+<!-- Loading static files -->
+{% load static %}
+
+<!-- Loading custom template tags blog file -->
+{% load blog_extras %}
+
+<!-- Link app-level css file in <head> -->
+{% block head %}
+    <link rel="stylesheet" href="{% static 'blog/blogStyle.css' %}">
+{% endblock %}
+
+<!-- Content for <body> -->
+{% block body %}
+    <div class="container">
+
+        <div class="row d-lg-none"> <!-- Smaller viewport size post nav start -->
+            <div style="overflow:auto;height:20rem;" class=" rounded mt-3">
+
+                <h2 class="text-center my-3 text-saPrimary">Lista de posts</h2>
+
+                <ul class="nav nav-pills nav-fill flex-column align-content-center py-3 mb-3" id="myTab"> <!-- Links start -->
+                    
+                    {% for post in blogPosts %}
+
+                        {% if post.id == displayedPostID %}
+
+                            <!-- Display as active the post link corresponding to either: post which user submitted comment to; post which is specified by URL -->
+
+                            <li class="nav-item my-1">
+                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#p{{post.id}}" type="button">{{post.title}}</button> <!-- On click toggles post corresponding to displayed text because of data-bs-target="#p{{post.id}}"-->
+                                <p>{{post.created_on}}</p>
+                            </li>
+
+                        {% else %}
+
+                            <!-- Display any other link as not active -->
+
+                            <li class="nav-item my-1">
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#p{{post.id}}" type="button">{{post.title}}</button> <!-- On click toggles post corresponding to displayed text because of data-bs-target="#p{{post.id}}"-->
+                                <p>{{post.created_on}}</p>
+                            </li>
+
+                        {% endif %}
+
+                    {% empty %}
+
+                        <!-- If no posts exists -->
+
+                        <h6 class="text-center">Sem posts ainda...</h6>
+
+                    {% endfor %}
+                    
+                </ul> <!-- Links end -->
+
+            </div>
+        </div> <!-- Smaller viewport size post nav end -->
+
+        <div class="row gx-4">
+
+            <div class="col-lg-8"> <!-- Posts start -->
+                <div class="tab-content">
+
+                    {% for post in blogPosts %}
+
+                        <!-- Fetch comments of post -->
+                        {% with comments=post.comments.all %}
+                            {% if post.id == displayedPostID %}
+
+                                <!-- Display as active the post corresponding to either: post which user submitted comment to; post which is specified by URL -->
+
+                                <div class="tab-pane active" id="p{{post.id}}"> <!-- id="p{{post.id}}" works alongside data-bs-target="#p{{post.id}}"-->
+
+                                    <h1 class="mt-3 text-saPrimary">{{post.title}}</h1>
+                                    <p class="text-secondary">{{post.created_on}}, por {{post.author}}</p>
+                                    <img src="{{post.thumbnail.url}}" alt="Thumbnail" class="img-fluid">
+                                    <hr>
+                                    <!-- Replace nbsp by normal space from, and display, post body-->
+                                    {{post.body|nbsp:"&nbsp;"|safe}} 
+
+
+                                    <hr class="my-5">
+
+
+                                    <h2 class="mb-3 text-saPrimary">Comentários</h2>
+
+                                    {% for comment in comments%}
+
+                                        <!-- Display comment -->
+                                        <div class="bg-saTertiary rounded p-2 mb-4">
+                                            <h3>{{comment.author}}</h3>
+                                            <p class="text-secondary">{{comment.created_on}}</p>
+                                            <p>{{comment.body}}</p>
+                                        </div>
+
+                                    {% empty %}
+
+                                        <!-- If no comments -->
+                                        <h6>Que vazio...</h6>
+
+                                    {% endfor %}
+
+
+                                    <hr class="my-5">
+
+
+                                    <h2 class="mb-3 text-saPrimary">Deixe seu comentário aqui!</h2>
+
+                                    <form action="{% url 'blog:index' post.id %}" method="post"> <!-- When submit, go to index views.py function URL with post as method -->
+                                        
+                                        <!-- Protection against CSRF attack -->
+                                        {%csrf_token%}
+
+                                        {% for field in form %}
+                                            <div class="my-1">
+
+                                                <label for="{{field.auto_id}}" class="form-label">{{field.label}}</label> <!-- Display label of current field, associate to field itself (<input> or <textarea> via id="")-->
+
+                                                <!-- Display field itself -->
+                                                {{field}}
+
+                                                {% if field.label == "Nome" %}
+
+                                                    <!-- Display form text for name field -->
+                                                    <div class="form-text">
+                                                        Máximo de 64 caracteres.
+                                                    </div>
+
+                                                {% elif field.label == "Comentário" %}
+
+                                                    <!-- Display form text for comment field-->
+                                                    <div class="form-text">
+                                                        Máximo de 1024 caracteres.
+                                                    </div>
+
+                                                {% endif %}
+
+                                            </div>
+                                        {% endfor %}
+
+                                        {% if formError %}
+
+                                            <!-- Display only if server-side validation fails -->
+                                            <div class="form-text text-danger">
+                                                {{formError}}
+                                            </div>
+
+                                        {% endif %}
+
+                                        <button type="submit" class="btn btn-primary my-1">Comentar</button>
+
+                                        <input type="hidden" name="subComFormPostID" value="{{post.id}}"> <!-- Provide pk of post to which comment belongs to views.py -->
+
+                                    </form>
+
+                                </div>
+
+                            {% else %}
+
+                                <!-- Display any other post as not active -->
+
+                                <div class="tab-pane" id="p{{post.id}}"> <!-- id="p{{post.id}}" works alongside data-bs-target="#p{{post.id}}"-->
+
+                                    <h1 class="mt-3 text-saPrimary">{{post.title}}</h1>
+                                    <p class="text-secondary">{{post.created_on}}, por {{post.author}}</p>
+                                    <img src="{{post.thumbnail.url}}" alt="Thumbnail" class="img-fluid">
+                                    <hr>
+                                    <!-- Replace nbsp by normal space from, and display, post body-->
+                                    {{post.body|nbsp:"&nbsp;"|safe}} 
+
+
+                                    <hr class="my-5">
+
+
+                                    <h2 class="mb-3 text-saPrimary">Comentários</h2>
+
+                                    {% for comment in comments%}
+
+                                        <!-- Display comments -->
+                                        <div class="bg-saTertiary  rounded p-2 mb-4">
+                                            <h3>{{comment.author}}</h3>
+                                            <p class="text-secondary">{{comment.created_on}}</p>
+                                            <p>{{comment.body}}</p>
+                                        </div>
+
+                                    {% empty %}
+
+                                        <!-- If no comments -->
+                                        <h6>Que vazio...</h6>
+
+                                    {% endfor %}
+
+
+                                    <hr class="my-5">
+
+
+                                    <h2 class="mb-3 text-saPrimary">Deixe seu comentário aqui!</h2>
+
+                                    <form action="{% url 'blog:index' post.id %}" method="post"> <!-- When submit, go to index views.py function URL with post as method -->
+
+                                        <!-- Protection against CSRF attack -->
+                                        {%csrf_token%}
+
+                                        {% for field in form %}
+                                            <div class="my-1">
+
+                                                <label for="{{field.auto_id}}" class="form-label">{{field.label}}</label> <!-- Display label of current field, associate to field itself (<input> or <textarea> via id="")-->
+
+                                                <!-- Display field itself -->
+                                                {{field}}
+
+                                                {% if field.label == "Nome" %}
+
+                                                    <!-- Display form text for name field -->
+                                                    <div class="form-text">
+                                                        Máximo de 64 caracteres.
+                                                    </div>
+
+                                                {% elif field.label == "Comentário" %}
+
+                                                    <!-- Display form text for comment field-->
+                                                    <div class="form-text">
+                                                        Máximo de 1024 caracteres.
+                                                    </div>
+
+                                                {% endif %}
+
+                                            </div>
+                                        {% endfor %}
+
+                                        {% if formError %}
+
+                                            <!-- Display only if server-side validation fails -->
+                                            <div class="form-text text-danger">
+                                                {{formError}}
+                                            </div>
+
+                                        {% endif %}
+
+                                        <button type="submit" class="btn btn-primary my-1">Comentar</button>
+
+                                        <input type="hidden" name="subComFormPostID" value="{{post.id}}"> <!-- Provide pk of post to which comment belongs to views.py -->
+
+                                    </form>
+
+                                </div>
+
+                            {% endif %}
+                        {% endwith %}
+
+                    {% empty %}
+
+                        <!-- If no posts exist -->
+                        <h6 class="my-5 text-center">Que vazio...</h6>
+
+                    {% endfor %}
+
+                </div>
+            </div> <!-- Posts end -->
+            
+            <div class="col-lg-4 d-none d-lg-block"> <!-- Larger viewport size post nav start -->
+                <div class="position-sticky rounded text-center py-3 mt-3" style="top:4.6rem; overflow:auto;height:32rem;"> <!-- Sticky div -->
+
+                    <h2 class="text-center my-3 text-saPrimary">Lista de posts</h2>
+
+                    <ul class="nav nav-pills flex-column nav-fill align-content-center" id="myTab"> <!-- Links start -->
+
+                        {% for post in blogPosts %}
+
+                            {% if post.id == displayedPostID %}
+
+                                <!-- Display as active the post link corresponding to either: post which user submitted comment to; post which is specified by URL -->
+                            
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#p{{post.id}}" type="button">{{post.title}}</button> <!-- On click toggles post corresponding to displayed text because of data-bs-target="#p{{post.id}}"-->
+                                    <p>{{post.created_on}}</p>
+                                </li>
+
+                            {% else %}
+
+                                <!-- Display any other link as not active -->
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#p{{post.id}}" type="button">{{post.title}}</button> <!-- On click toggles post corresponding to displayed text because of data-bs-target="#p{{post.id}}"-->
+                                    <p>{{post.created_on}}</p>
+                                </li>
+
+                            {% endif %}
+
+                        {% empty %}
+
+                            <!-- If no posts exists -->
+
+                            <h6>Sem posts ainda...</h6>
+
+                        {% endfor %}
+                        
+                    </ul> <!-- Links end -->
+
+                </div>
+            </div> <!-- Larger viewport size post nav end -->
+                
+        </div>
+        
+    </div>
+{% endblock %}

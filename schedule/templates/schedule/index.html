@@ -1,0 +1,53 @@
+<!-- Template extension from header.html -->
+{% extends 'header.html' %}
+
+<!-- Content for <body> -->
+{% block body %}
+
+    <h1 class="text-center mt-4 text-saPrimary" style="margin-bottom:2.5rem;">Veja a programação do SulAroma2021 - agora 100% online!</h1>
+
+    <div class="container mt-5">
+
+        <table class="table table-bordered table-striped"> <!-- Bootstrap 5.1 classes, obtained from documentation of such-->
+            
+            <!-- Definition of table headers -->
+            <thead>
+                <tr>
+                    <th scope="col" class="text-saSecondary">Quando</th>
+                    <th scope="col" class="text-saSecondary">Nome do evento</th>
+                    <th scope="col" class="text-saSecondary">Descriçao</th>
+                </tr>
+            </thead>
+            
+            <!-- Definition for table body -->
+            <tbody>
+                
+                {% for each in events %}
+
+                    <!-- Display formatted strings in each data cell -->
+                    <tr>
+                        <td>{{each.0}}</td>
+                        <td>{{each.1}}</td>
+                        <td>{{each.2}}</td>
+                    </tr>
+
+                {% empty%}
+
+                    <!-- If no events -->
+                    <tr>
+                        <td>Sem eventos ainda...</td>
+                        <td>*</td>
+                        <td>*</td>
+                    </tr>
+                    
+                {% endfor %}            
+                
+            </tbody>
+            
+        </table>
+
+    </div>
+    
+{% endblock %}
+
+    

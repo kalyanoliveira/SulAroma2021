@@ -1,0 +1,220 @@
+<!-- Template extension from header.html -->
+{% extends 'header.html' %}
+
+<!-- Loading static files -->
+{% load static %}
+
+<!-- Loading custom template tags blog file -->
+{% load blog_extras %}
+
+<!-- Link app-level css file in <head> -->
+{% block head%}
+    <link rel="stylesheet" href="{% static 'home/homeStyle.css'%}">
+{% endblock %}
+
+<!-- Content for <body> -->
+{% block body %}
+
+    {% if carouselSlides %}
+
+        <!-- Display image carousel if carousel slides/images exists -->
+        <div id="carouselTest" class="carousel slide" data-bs-ride="carousel"> <!-- Carousel start -->
+
+            <!-- Slide indicators for carousel, from bootstrap 5.1 documentation -->
+            <div class="carousel-indicators">
+
+                {% for carouselSlide in carouselSlides %}
+
+                    {% if carouselSlide.slideNumber == 1 %}
+                        
+                        <button type="button" data-bs-target="#carouselTest" data-bs-slide-to='{{ carouselSlide.slideNumber|add:"-1" }}' class="active"></button>
+                    
+                    {% else %}
+                    
+                        <button type="button" data-bs-target="#carouselTest" data-bs-slide-to='{{ carouselSlide.slideNumber|add:"-1" }}'></button>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+            <div class="carousel-inner"> <!-- Carousel inner start-->
+
+                {% for carouselSlide in carouselSlides %}
+
+                    {% if carouselSlide.slideNumber == 1 %}
+                
+                        <!-- Carousel slide, from bootstrap 5 documentation -->
+                        <div class="carousel-item active">
+                            <img src="{{ carouselSlide.image.url }}" alt="" class="d-block w-100 h-100">
+                            <div class="carousel-caption d-none d-md-block text-center bg-saPrimary" style="--bs-bg-opacity: .5;">
+                            <h1>{{ carouselSlide.title }}</h1>
+                            <p>{{ carouselSlide.description }}</p>
+                            </div>
+                            <div class="carousel-caption d-block d-md-none text-center bg-saPrimary" style="--bs-bg-opacity: .5;">
+                            <h1>{{ carouselSlide.title }}</h1>
+                            </div>
+                        </div>
+
+                    {% else %}
+
+                        <!-- Carousel slide, from bootstrap 5 documentation -->
+                        <div class="carousel-item">
+                            <img src="{{ carouselSlide.image.url }}" alt="" class="d-block w-100 h-100">
+                            <div class="carousel-caption d-none d-md-block text-center bg-saPrimary" style="--bs-bg-opacity: .5;">
+                            <h1>{{ carouselSlide.title }}</h1>
+                            <p>{{ carouselSlide.description }}</p>
+                            </div>
+                            <div class="carousel-caption d-block d-md-none text-center bg-saPrimary" style="--bs-bg-opacity: .5;">
+                            <h1>{{ carouselSlide.title }}</h1>
+                            </div>
+                        </div>
+
+                    {% endif %}
+                
+                {% endfor %}
+
+            </div> <!-- Carousel inner end -->
+
+            <!-- Buttons to change carousel slides, from bootstrap 5.1 documentation -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselTest" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselTest" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
+        </div> <!-- Carousel end -->
+
+    {% else %}
+
+        <!-- If no carousel images data was supplied -->
+        <h6 class="text-center mb-3">Sem imagens do SulAroma2018 ainda...</h6>
+
+    {% endif %}
+
+    <div class="container mt-5"> <!-- Main container start -->
+
+        <div class="row gx-4"> <!-- Webpages' descriptive content start -->
+
+            <!-- Speakers'/contact icon, header, paragraph, and button link -->
+            <div class="col-lg-4 text-center mb-5">
+
+                <!-- From bootstrap icons -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-people-fill circular text-saTertiary" viewBox="0 0 16 16">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                    <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                </svg>
+
+                <h2 class="mt-2">Palestrantes de todo país, em um lugar</h3>
+
+                <p>Texto-parágrafo de amostra</p>
+
+                <a href="{% url 'contact:index' %}" class="d-block"><button type="button" class="btn btn-saSecondary">Conheça os palestrantes</button></a>
+
+            </div>
+
+            <!-- Schedule/events icon, header, paragraph, and button link -->
+            <div class="col-lg-4 text-center mb-5">
+
+                <!-- From bootstrap icons -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-calendar2-week circular text-saTertiary" viewBox="0 0 16 16">
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
+                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                </svg>
+
+                <h2 class="mt-2">100% online - programação como presencial</h3>
+
+                <p>Texto-parágrafo de amostra</p>
+
+                <a href="{% url 'schedule:index' %}" class="d-block"><button type="button" class="btn btn-saSecondary">Veja a programação</button></a>
+
+            </div>
+
+            <!-- Tickets icon, header, paragraph, and button link -->
+            <div class="col-lg-4 text-center mb-5">
+            
+                <!-- From bootstrap icons -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-bag circular text-saTertiary" viewBox="0 0 16 16">
+                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                </svg>
+
+                <h2 class="mt-2">Compre já seu ingresso e garanta seu lugar!</h3>
+
+                <p>Texto-parágrafo de amostra</p>
+
+                <!-- Link would be supplied by client -->
+                <a href="#" class="d-block"><button type="button" class="btn btn-saSecondary">Compre os ingressos</button></a>
+
+            </div>
+
+        </div> <!-- Webpages' descriptive content end -->
+
+        <hr class="mb-5">
+
+        <h2 class="text-center mb-5">Leia os posts do nosso blog</h1>
+
+        <div class="row"> <!-- Blog post cards start -->
+
+            {% if latestBlogPost %}
+
+                <!-- If latest exists, render bootstrap card of latest blog post -->
+                <div class="col-lg mb-5">
+                    <div class="card">
+
+                        <img src="{{latestBlogPost.thumbnail.url}}" class="card-img-top" alt="...">
+
+                        <div class="card-header text-saPrimary">
+                            Último blog post
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{latestBlogPost.title}}</h5>
+                            <p class="card-text">{{latestBlogPost.lead_in}}</p>
+                            <a href="{% url 'blog:index' latestBlogPost.id %}" class="btn btn-saSecondary">Continuar lendo</a> <!-- pIntVariable = id of post user wants to keep reading -->
+                        </div>
+
+                    </div>
+                </div>
+            
+            {% endif %}
+
+            {% if randomBlogPost %}
+
+                <!-- If random blog post exists, render bootstrap card of random blog post-->
+                <div class="col-lg mb-5">
+                    <div class="card">
+
+                        <img src="{{randomBlogPost.thumbnail.url}}" class="card-img-top" alt="...">
+
+                        <div class="card-header text-saPrimary">
+                            Blog post escolhido a mão
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{randomBlogPost.title}}</h5>
+                            <p class="card-text">{{randomBlogPost.lead_in}}</p>
+                            <a href="{% url 'blog:index' randomBlogPost.id %}" class="btn btn-saSecondary">Continuar lendo</a> <!-- pIntVariable = id of post user wants to keep reading -->
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endif %}
+            
+            {% if noPosts %}
+            
+                <!-- If no posts data was supplied -->
+                <h6 class="text-center mb-3">Sem posts ainda...</h6>
+
+            {% endif %}
+
+        </div> <!-- Blog post cards end -->
+
+    </div> <!-- Main container end -->
+
+{% endblock %}

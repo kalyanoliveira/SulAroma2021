@@ -1,0 +1,4 @@
+/* Sets height for speaker's card profile picture image */
+.card-img-top {
+    height: 16rem;
+}

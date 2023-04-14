@@ -1,0 +1,49 @@
+<!-- Template extension from header.html -->
+{% extends 'header.html' %}
+
+<!-- Loading static files -->
+{% load static %}
+
+<!-- Link app-level css file in <head> -->
+{% block head %}
+    <link rel="stylesheet" href="{% static 'contact/contactStyle.css' %}">
+{% endblock %}
+
+<!-- Content for <body> -->
+{% block body %}
+
+    <h1 class="text-center mt-4 text-saPrimary" style="margin-bottom:2.5rem;">Conheça os palestrantes do SulAroma2021</h1>
+
+    <div class="container-lg my-3">
+        <div class="row gy-5">
+
+            {% for speaker in speakers %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mx-auto"> <!-- Column display changes at every breakpoint thanks to col-bp-x classes -->
+
+                    <!-- Display speaker information as bootstrap card with .card -->
+                    <div class="card w-100">
+
+                        <!-- Profile picture -->
+                        <img src="{{ speaker.profilePicture.url }}" class="card-img-top" alt="">
+
+                        <!-- Name and biography -->
+                        <div class="card-body">
+                            <h5 class="card-title text-saSecondary">{{ speaker.name }}</h5>
+                            <p class="card-text">{{ speaker.biography }}</p>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            {% empty %}
+
+                <!-- If no speaker's data -->
+                <h6 class="text-center mb-3">Sem palestrantes ainda...</h6>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

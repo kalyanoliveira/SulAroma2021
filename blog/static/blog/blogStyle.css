@@ -1,0 +1,15 @@
+/* Default text and background color of posts nav button-like links */
+.nav-pills .nav-link{
+    background-color: var(--bs-saSecondary);
+    color:var(--bs-light);
+}
+
+/* Active background color of posts nav button-like links */
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: var(--bs-saPrimary);
+}
+
+/* Default text color of posts nav "published-when" paragraphs */
+.nav-item > p {
+    color:var(--bs-secondary);
+}

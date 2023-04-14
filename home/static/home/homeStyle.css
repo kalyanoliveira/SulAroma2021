@@ -1,0 +1,19 @@
+/* Put fixed size to carousel slide images  */
+.carousel-item {
+    height: 32rem;
+}
+
+/* Put fixed size to svg in descriptive content div */
+.circular {
+    width: 9rem;
+}
+
+/* Put fixed size to blog post cards thumbnail images  */
+.card-img-top {
+    height: 16rem;
+}
+
+/* Change color of all <h2>s to website's primary color  */
+h2 {
+    color: var(--bs-saPrimary);
+}
